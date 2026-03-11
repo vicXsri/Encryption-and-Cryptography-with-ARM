@@ -156,39 +156,22 @@ status decrypt(uint8_t (*arr)[4], uint8_t round, uint8_t round_key[][4][4]){
 }
 
 status AES128_ECB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
-
-
-         printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         for(int k=0; k < 16; k++){
-             bre[k] = arr[itr++];
-         }
-
+         for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
 
          decrypt(dim4(bre), 10, round_key128);
 
-         for(uint8_t r=0; r<4;r++)
-             for(uint8_t c=0; c<4;c++)
-                 decryptData[eitr++] = invstate[c][r];
+         for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = invstate[c][r];
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				 pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {	*decryptDataLen = eitr;	return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {	*decryptDataLen = eitr;	return success; }}
 
 				*decryptDataLen = eitr - pad;
 				return success;
@@ -200,32 +183,23 @@ status AES128_ECB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES192_ECB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, pad;
 
     for(int i=0; i< (arrsize/16); i++){
-        printf("Cipher block[%d]\r\n\r\n",i+1);
-        for(int k=0; k < 16; k++){
-            bre[k] = arr[itr++];
-        }
+        for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
+
         decrypt(dim4(bre), 12, round_key192);
-        for(uint8_t r=0; r<4;r++)
-            for(uint8_t c=0; c<4;c++)
-                decryptData[eitr++] = invstate[c][r];
+
+        for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = invstate[c][r];
 
 /*********************************************************PKCS#7***************************************************************************/
         if((arrsize/16) == i+1){
-			uint8_t pad = decryptData[eitr - 1];
+			pad = decryptData[eitr - 1];
 
-			if (pad == 0 || pad > 16) {
-				*decryptDataLen = eitr;
-				return success;
-			}
+			if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
 			for (int i = 0; i < pad; i++) {
-				if (decryptData[eitr - 1 - i] != pad) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr;return success;}
 			}
 
 			*decryptDataLen = eitr - pad;
@@ -238,87 +212,57 @@ status AES192_ECB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES256_ECB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
-        printf("Cipher block[%d]\r\n\r\n",i+1);
-        for(int k=0; k < 16; k++){
-            bre[k] = arr[itr++];
-        }
+        for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
+
         decrypt(dim4(bre), 14, round_key256);
-        for(uint8_t r=0; r<4;r++)
-            for(uint8_t c=0; c<4;c++)
-                decryptData[eitr++] = invstate[c][r];
+
+        for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = invstate[c][r];
 
 /*********************************************************PKCS#7***************************************************************************/
         if((arrsize/16) == i+1){
-			uint8_t pad = decryptData[eitr - 1];
+			pad = decryptData[eitr - 1];
 
-			if (pad == 0 || pad > 16) {
-				*decryptDataLen = eitr;
-				return success;
-			}
+			if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-			for (int i = 0; i < pad; i++) {
-				if (decryptData[eitr - 1 - i] != pad) {
-					*decryptDataLen = eitr;
-					return success;
-				}
-			}
+			for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr;return success;}}
+
 			*decryptDataLen = eitr - pad;
 			return success;
         }
 /********************************************************************************************************************************************/
     }
 	return success;
-
 }
 
 status AES128_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, cbcitr=16, arritr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, cbcitr=16, arritr=0, pad=0;
 
 	for(int i=0; i< (arrsize/16); i++){
 
-
-         printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         for(int k=0; k < 16; k++){
-             bre[k] = arr[itr++];
-         }
-
+         for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
 
          decrypt(dim4(bre), 10, round_key128);
 
-         for(uint8_t r=0; r<4;r++)
-             for(uint8_t c=0; c<4;c++)
-                 decryptData[eitr++] = invstate[c][r];
-
+         for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = invstate[c][r];
 
          if(i==0)
              for(int irf =0; irf<16; irf++)   decryptData[irf] ^=  IV[irf];
          else
-             for(int i =0 ;  i<16;i++)
-                 decryptData[cbcitr++] ^= arr[arritr++];
-
-
+             for(int i =0 ;  i<16;i++)	decryptData[cbcitr++] ^= arr[arritr++];
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr;return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr;return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -328,42 +272,29 @@ status AES128_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES192_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, cbcitr=16, arritr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, cbcitr=16, arritr=0, pad=0;
 
 	for(int i=0; i< (arrsize/16); i++){
-        printf("Cipher block[%d]\r\n\r\n",i+1);
-        for(int k=0; k < 16; k++){
-            bre[k] = arr[itr++];
-        }
-        decrypt(dim4(bre), 12, round_key192);
-        for(uint8_t r=0; r<4;r++)
-            for(uint8_t c=0; c<4;c++)
-                decryptData[eitr++] = invstate[c][r];
 
-        if(i==0)
-            for(int irf =0; irf<16; irf++)   decryptData[irf] ^=  IV[irf];
-        else
-            for(int i =0 ;  i<16;i++)
-                decryptData[cbcitr++] ^= arr[arritr++];
+		for(int k=0; k < 16; k++) bre[k] = arr[itr++];
 
+		decrypt(dim4(bre), 12, round_key192);
+
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = invstate[c][r];
+
+        if(i==0)	for(int irf =0; irf<16; irf++)   decryptData[irf] ^=  IV[irf];
+        else		for(int i =0 ;  i<16;i++)	decryptData[cbcitr++] ^= arr[arritr++];
 
 /*********************************************************PKCS#7***************************************************************************/
         if((arrsize/16) == i+1){
-			uint8_t pad = decryptData[eitr - 1];
+			pad = decryptData[eitr - 1];
 
-			if (pad == 0 || pad > 16) {
-				*decryptDataLen = eitr;
-				return success;
-			}
+			if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-			for (int i = 0; i < pad; i++) {
-				if (decryptData[eitr - 1 - i] != pad) {
-					*decryptDataLen = eitr;
-					return success;
-				}
-			}
+			for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 			*decryptDataLen = eitr - pad;
+
 			return success;
         }
 /********************************************************************************************************************************************/
@@ -374,41 +305,29 @@ status AES192_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
 status AES256_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
 
-	uint8_t bre[16] = {0}, itr=0, eitr=0, cbcitr=16, arritr=0;
+	uint8_t bre[16] = {0}, itr=0, eitr=0, cbcitr=16, arritr=0, pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
-        printf("Cipher block[%d]\r\n\r\n",i+1);
-        for(int k=0; k < 16; k++){
-            bre[k] = arr[itr++];
-        }
+
+    	for(int k=0; k < 16; k++) bre[k] = arr[itr++];
+
         decrypt(dim4(bre), 14, round_key256);
-        for(uint8_t r=0; r<4;r++)
-            for(uint8_t c=0; c<4;c++)
-                decryptData[eitr++] = invstate[c][r];
 
-        if(i==0)
-            for(int irf =0; irf<16; irf++)   decryptData[irf] ^=  IV[irf];
-        else
-            for(int i =0 ;  i<16;i++)
-                decryptData[cbcitr++] ^= arr[arritr++];
+        for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = invstate[c][r];
 
+        if(i==0)	for(int irf =0; irf<16; irf++)   decryptData[irf] ^=  IV[irf];
+        else		for(int i =0 ;  i<16;i++)	decryptData[cbcitr++] ^= arr[arritr++];
 
 /*********************************************************PKCS#7***************************************************************************/
         if((arrsize/16) == i+1){
-			uint8_t pad = decryptData[eitr - 1];
+			pad = decryptData[eitr - 1];
 
-			if (pad == 0 || pad > 16) {
-				*decryptDataLen = eitr;
-				return success;
-			}
+			if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-			for (int i = 0; i < pad; i++) {
-				if (decryptData[eitr - 1 - i] != pad) {
-					*decryptDataLen = eitr;
-					return success;
-				}
-			}
+			for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
+
 			*decryptDataLen = eitr - pad;
+
 			return success;
         }
 /********************************************************************************************************************************************/
@@ -418,53 +337,29 @@ status AES256_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES128_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
 
-
-    	printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         if(i==0){
-        	 for(int ih=0; ih < 16; ih++){
-        		 bre[ih] = IV[ih];
-				 printf("bre - > %d | IV -> %d\r\n", bre[ih],IV[ih]);
-        	 }
-         }
-         else
-			 for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
+         if(i==0)	for(int ih=0; ih < 16; ih++)	bre[ih] = IV[ih];
+         else 		for(int k=0; k < 16; k++)		bre[k] = arr[itr++];
 
          encrypt(dim4(bre), 10, round_key128);
 
-         for(uint8_t r=0; r<4;r++){
-             for(uint8_t c=0; c<4;c++){
-                 decryptData[eitr++] = state[c][r];
-                 printf("decryptData[%d] - > 0x%02X\r\n", eitr-1,invstate[c][r]);
-             }
-         }
+         for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++) decryptData[eitr++] = state[c][r];
 
-    	 for(int ih=0; ih < 16; ih++){
-         	decryptData[aitr] ^= arr[aitr];
-    		aitr++;
-    	 }
+    	 for(int ih=0; ih < 16; ih++){decryptData[aitr] ^= arr[aitr]; aitr++;}
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr;return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -474,53 +369,31 @@ status AES128_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES192_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
 
+         if(i==0)	for(int ih=0; ih < 16; ih++) bre[ih] = IV[ih];
 
-    	printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         if(i==0){
-        	 for(int ih=0; ih < 16; ih++){
-        		 bre[ih] = IV[ih];
-				 printf("bre - > %d | IV -> %d\r\n", bre[ih],IV[ih]);
-        	 }
-         }
-         else
-			 for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
+         else 		for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
 
          encrypt(dim4(bre), 12, round_key192);
 
-         for(uint8_t r=0; r<4;r++){
-             for(uint8_t c=0; c<4;c++){
-                 decryptData[eitr++] = state[c][r];
-                 printf("decryptData[%d] - > 0x%02X\r\n", eitr-1,invstate[c][r]);
-             }
-         }
+         for(uint8_t r=0; r<4;r++) for(uint8_t c=0; c<4;c++) decryptData[eitr++] = state[c][r];
 
-    	 for(int ih=0; ih < 16; ih++){
-         	decryptData[aitr] ^= arr[aitr];
-    		aitr++;
-    	 }
+
+    	 for(int ih=0; ih < 16; ih++){decryptData[aitr] ^= arr[aitr]; aitr++;}
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -530,53 +403,30 @@ status AES192_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES256_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0;
+    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
 
+         if(i==0)	for(int ih=0; ih < 16; ih++)	bre[ih] = IV[ih];
 
-    	printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         if(i==0){
-        	 for(int ih=0; ih < 16; ih++){
-        		 bre[ih] = IV[ih];
-				 printf("bre - > %d | IV -> %d\r\n", bre[ih],IV[ih]);
-        	 }
-         }
-         else
-			 for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
+         else		for(int k=0; k < 16; k++)	bre[k] = arr[itr++];
 
          encrypt(dim4(bre), 14, round_key256);
 
-         for(uint8_t r=0; r<4;r++){
-             for(uint8_t c=0; c<4;c++){
-                 decryptData[eitr++] = state[c][r];
-                 printf("decryptData[%d] - > 0x%02X\r\n", eitr-1,invstate[c][r]);
-             }
-         }
+         for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
 
-    	 for(int ih=0; ih < 16; ih++){
-         	decryptData[aitr] ^= arr[aitr];
-    		aitr++;
-    	 }
+    	 for(int ih=0; ih < 16; ih++){decryptData[aitr] ^= arr[aitr]; aitr++;}
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -587,54 +437,30 @@ status AES256_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
 status AES128_OFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
 
-	uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, endata[arrsize];
+	uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, endata[arrsize], pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
 
+         if(i==0)	for(int ih=0; ih < 16; ih++)	bre[ih] = IV[ih];
 
-    	printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         if(i==0){
-        	 for(int ih=0; ih < 16; ih++){
-        		 bre[ih] = IV[ih];
-				 printf("bre - > %d | IV -> %d\r\n", bre[ih],IV[ih]);
-        	 }
-         }
-         else
-			 for(int k=0; k < 16; k++)	bre[k] = endata[itr++];
+         else		for(int k=0; k < 16; k++)	bre[k] = endata[itr++];
 
          encrypt(dim4(bre), 10, round_key128);
 
-         for(uint8_t r=0; r<4;r++){
-             for(uint8_t c=0; c<4;c++){
-                 decryptData[eitr++] = state[c][r];
-                 endata[eitr-1] = decryptData[eitr-1];
-                 printf("decryptData[%d] - > 0x%02X\r\n", eitr-1,invstate[c][r]);
-             }
-         }
+         for(uint8_t r=0; r<4;r++){for(uint8_t c=0; c<4;c++){decryptData[eitr++] = state[c][r]; endata[eitr-1] = decryptData[eitr-1];}}
 
-    	 for(int ih=0; ih < 16; ih++){
-         	decryptData[aitr] ^= arr[aitr];
-    		aitr++;
-    	 }
+    	 for(int ih=0; ih < 16; ih++){decryptData[aitr] ^= arr[aitr]; aitr++;}
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -644,54 +470,30 @@ status AES128_OFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES192_OFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, endata[arrsize];
+    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, endata[arrsize], pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
 
+         if(i==0)	for(int ih=0; ih < 16; ih++)	bre[ih] = IV[ih];
 
-    	printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         if(i==0){
-        	 for(int ih=0; ih < 16; ih++){
-        		 bre[ih] = IV[ih];
-				 printf("bre - > %d | IV -> %d\r\n", bre[ih],IV[ih]);
-        	 }
-         }
-         else
-			 for(int k=0; k < 16; k++)	bre[k] = endata[itr++];
+         else		for(int k=0; k < 16; k++)	bre[k] = endata[itr++];
 
          encrypt(dim4(bre), 12, round_key192);
 
-         for(uint8_t r=0; r<4;r++){
-             for(uint8_t c=0; c<4;c++){
-                 decryptData[eitr++] = state[c][r];
-                 endata[eitr-1] = decryptData[eitr-1];
-                 printf("decryptData[%d] - > 0x%02X\r\n", eitr-1,invstate[c][r]);
-             }
-         }
+         for(uint8_t r=0; r<4;r++){for(uint8_t c=0; c<4;c++){decryptData[eitr++] = state[c][r]; endata[eitr-1] = decryptData[eitr-1];}}
 
-    	 for(int ih=0; ih < 16; ih++){
-         	decryptData[aitr] ^= arr[aitr];
-    		aitr++;
-    	 }
+    	 for(int ih=0; ih < 16; ih++){decryptData[aitr] ^= arr[aitr]; aitr++;}
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -701,54 +503,29 @@ status AES192_OFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES256_OFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, endata[arrsize];
+    uint8_t bre[16] = {0}, itr=0, eitr=0, aitr=0, endata[arrsize], pad=0;
 
     for(int i=0; i< (arrsize/16); i++){
 
-
-    	printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         if(i==0){
-        	 for(int ih=0; ih < 16; ih++){
-        		 bre[ih] = IV[ih];
-				 printf("bre - > %d | IV -> %d\r\n", bre[ih],IV[ih]);
-        	 }
-         }
-         else
-			 for(int k=0; k < 16; k++)	bre[k] = endata[itr++];
+         if(i==0)	for(int ih=0; ih < 16; ih++) bre[ih] = IV[ih];
+         else		for(int k=0; k < 16; k++)	bre[k] = endata[itr++];
 
          encrypt(dim4(bre), 14, round_key256);
 
-         for(uint8_t r=0; r<4;r++){
-             for(uint8_t c=0; c<4;c++){
-                 decryptData[eitr++] = state[c][r];
-                 endata[eitr-1] = decryptData[eitr-1];
-                 printf("decryptData[%d] - > 0x%02X\r\n", eitr-1,invstate[c][r]);
-             }
-         }
+         for(uint8_t r=0; r<4;r++){for(uint8_t c=0; c<4;c++){decryptData[eitr++] = state[c][r]; endata[eitr-1] = decryptData[eitr-1];}}
 
-    	 for(int ih=0; ih < 16; ih++){
-         	decryptData[aitr] ^= arr[aitr];
-    		aitr++;
-    	 }
+    	 for(int ih=0; ih < 16; ih++){decryptData[aitr] ^= arr[aitr]; aitr++;}
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr;	return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -758,113 +535,72 @@ status AES256_OFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES128_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0;
+    uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0, pad=0;
 
     uint16_t value = 0;
 
-    for(int p=0;p<16;p++){
-    	ctrtemp[p] = CTR[p];
-    }
+    for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
 
     for(int i=0; i< (arrsize/16); i++){
 
+         for(int k=0; k < 16; k++)	bre[k] = ctrtemp[k];
 
-         printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         for(int k=0; k < 16; k++){
-             bre[k] = ctrtemp[k];
-         	printf("bre[%d] -> 0x%02X\r\n", k, bre[k]);
-
-         }
-        value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
-		ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
-
+         value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
+         ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
 
          encrypt(dim4(bre), 10, round_key128);
 
          for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
 
-         for(int ip =0 ;  ip<16; ip++) printf("encrypt data [%d] 0x%02X \r\n", (eitr-16)+ip, decryptData[eitr-16+ip]);
-
-		for(int ip =0 ;  ip<16; ip++) {
-			decryptData[iptr++] ^= arr[epitr++];
-		}
+         for(int ip =0 ;  ip<16; ip++)	decryptData[iptr++] ^= arr[epitr++];
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
      }
 	return success;
-
 }
 
 status AES192_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0;
+    uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0, pad=0;
 
     uint16_t value = 0;
 
-    for(int p=0;p<16;p++){
-    	ctrtemp[p] = CTR[p];
-    }
+    for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
 
     for(int i=0; i< (arrsize/16); i++){
 
+         for(int k=0; k < 16; k++)	bre[k] = ctrtemp[k];
 
-         printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         for(int k=0; k < 16; k++){
-             bre[k] = ctrtemp[k];
-         	printf("bre[%d] -> 0x%02X\r\n", k, bre[k]);
-
-         }
         value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
 		ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
-
 
          encrypt(dim4(bre), 12, round_key192);
 
          for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
 
-         for(int ip =0 ;  ip<16; ip++) printf("encrypt data [%d] 0x%02X \r\n", (eitr-16)+ip, decryptData[eitr-16+ip]);
-
-		for(int ip =0 ;  ip<16; ip++) {
-			decryptData[iptr++] ^= arr[epitr++];
-		}
+         for(int ip =0 ;  ip<16; ip++)	decryptData[iptr++] ^= arr[epitr++];
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr;	return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
@@ -874,61 +610,40 @@ status AES192_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 }
 
 status AES256_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *decryptData, size_t *decryptDataLen){
-    uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0;
+    uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0, pad=0;
 
     uint16_t value = 0;
 
-    for(int p=0;p<16;p++){
-    	ctrtemp[p] = CTR[p];
-    }
+    for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
 
     for(int i=0; i< (arrsize/16); i++){
 
+         for(int k=0; k < 16; k++)	bre[k] = ctrtemp[k];
 
-         printf("Cipher block[%d]\r\n\r\n",i+1);
-
-         for(int k=0; k < 16; k++){
-             bre[k] = ctrtemp[k];
-         	printf("bre[%d] -> 0x%02X\r\n", k, bre[k]);
-
-         }
-        value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
-		ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
-
+         value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
+         ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
 
          encrypt(dim4(bre), 14, round_key256);
 
          for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
 
-         for(int ip =0 ;  ip<16; ip++) printf("encrypt data [%d] 0x%02X \r\n", (eitr-16)+ip, decryptData[eitr-16+ip]);
-
-		for(int ip =0 ;  ip<16; ip++) {
-			decryptData[iptr++] ^= arr[epitr++];
-		}
+         for(int ip =0 ;  ip<16; ip++)	decryptData[iptr++] ^= arr[epitr++];
 
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
-				uint8_t pad = decryptData[eitr - 1];
+				pad = decryptData[eitr - 1];
 
-				if (pad == 0 || pad > 16) {
-					*decryptDataLen = eitr;
-					return success;
-				}
+				if (pad == 0 || pad > 16) {*decryptDataLen = eitr; return success;}
 
-				for (int i = 0; i < pad; i++) {
-					if (decryptData[eitr - 1 - i] != pad) {
-						*decryptDataLen = eitr;
-						return success;
-					}
-				}
+				for (int i = 0; i < pad; i++) {if (decryptData[eitr - 1 - i] != pad) {*decryptDataLen = eitr; return success;}}
 
 				*decryptDataLen = eitr - pad;
+
 				return success;
          }
 /********************************************************************************************************************************************/
      }
 	return success;
-
 }
 
 
@@ -943,15 +658,12 @@ status AES128_Decrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key
     	return success;
     }
 
-
 /*********************************************************AES_CBC_DEC***************************************************************************/
 
     else if(mode == AES_CBC_DEC){
     	AES128_CBC_DE(mode, arr, arrsize, key, IV,decryptData, decryptDataLen);
     	return success;
     }
-
-
 
 /*********************************************************AES_CBC_DEC***************************************************************************/
 
@@ -960,16 +672,12 @@ status AES128_Decrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key
     	return success;
     }
 
-
-
 /*********************************************************AES_CBC_DEC***************************************************************************/
 
     else if(mode == AES_OFB_DEC){
 		AES128_OFB_DE(mode, arr, arrsize, key, IV,decryptData, decryptDataLen);
     	return success;
     }
-
-
 
 /*********************************************************AES_CTR_DEC***************************************************************************/
 

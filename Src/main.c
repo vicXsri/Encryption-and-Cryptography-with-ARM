@@ -158,7 +158,7 @@ int main(){
 
 //	 AES128_CTR();
 //	 AES192_CTR();
-     AES256_CTR();
+//     AES256_CTR();
 
 	while(1){}
 }

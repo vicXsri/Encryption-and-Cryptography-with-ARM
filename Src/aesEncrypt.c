@@ -153,24 +153,20 @@ status AES128_ECB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize];
 
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 /*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
-
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
+	for(int i=0; i< newarr; i++){
 
-            for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
+		for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
 
-            encrypt(dim4(bre), 10, round_key128);
+		encrypt(dim4(bre), 10, round_key128);
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
-        }
-
-        *encryptDataLen = eitr;
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+	}
+    *encryptDataLen = eitr;
 
     return success;
 
@@ -185,24 +181,20 @@ status AES192_ECB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize];
 
-/*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+/*********************************************************PKCS#7***************************************************************************/
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-            for(int k=0; k < 16; k++){
-                bre[k] = temp[itr++];
-            }
-            encrypt(dim4(bre), 12, round_key192);
-            for(uint8_t r=0; r<4;r++)
-                for(uint8_t c=0; c<4;c++)
-                    encryptData[eitr++] = state[c][r];
-        }
-        *encryptDataLen = eitr;
+	for(int i=0; i< newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
+
+		encrypt(dim4(bre), 12, round_key192);
+
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+	}
+	*encryptDataLen = eitr;
 
     return success;
 }
@@ -216,24 +208,19 @@ status AES256_ECB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize];
 
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 /*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
-
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
 
-        for(int i=0; i < newarr; i++){
-            for(int k=0; k < 16; k++){
-                bre[k] = temp[itr++];
-            }
-            encrypt(dim4(bre), 14, round_key256);
-            for(uint8_t r=0; r<4;r++)
-                for(uint8_t c=0; c<4;c++)
-                    encryptData[eitr++] = state[c][r];
-        }
-        *encryptDataLen = eitr;
+	for(int i=0; i < newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
+
+		encrypt(dim4(bre), 14, round_key256);
+
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+	}
+	*encryptDataLen = eitr;
 
     return success;
 }
@@ -247,28 +234,23 @@ status AES128_CBC_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize];
 
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 /*********************************************************PKCS#7***************************************************************************/
-
-    	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
-
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
-
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
 
-        for(int i =0 ;  i<16;i++)   temp[i] ^=  IV[i];
+	for(int i =0 ;  i<16;i++)   temp[i] ^=  IV[i];
 
-        for(int i=0; i< newarr; i++){
-            for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
+	for(int i=0; i< newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
 
-            encrypt(dim4(bre), 10, round_key128);
+		encrypt(dim4(bre), 10, round_key128);
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
 
-            for(int i =0 ;  i<16;i++)   temp[i+itr] ^= encryptData[cbcitr++];
-        }
-        *encryptDataLen = eitr;
+		for(int i =0 ;  i<16;i++)   temp[i+itr] ^= encryptData[cbcitr++];
+	}
+	*encryptDataLen = eitr;
 
     return success;
 
@@ -283,31 +265,25 @@ status AES192_CBC_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize];
 
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
+
 /*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
-
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
-        for(int i =0 ;  i<16;i++)   temp[i] ^=  IV[i];
+	for(int i =0 ;  i<16;i++)   temp[i] ^=  IV[i];
 
-        for(int i=0; i< newarr; i++){
-            for(int k=0; k < 16; k++){
-                bre[k] = temp[itr++];
-            }
-            encrypt(dim4(bre), 12, round_key192);
-            for(uint8_t r=0; r<4;r++)
-                for(uint8_t c=0; c<4;c++)
-                    encryptData[eitr++] = state[c][r];
+	for(int i=0; i< newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
 
-            for(int i =0 ;  i<16;i++)   temp[i+itr] ^= encryptData[cbcitr++];
+		encrypt(dim4(bre), 12, round_key192);
 
-        }
-        *encryptDataLen = eitr;
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+
+		for(int i =0 ;  i<16;i++)   temp[i+itr] ^= encryptData[cbcitr++];
+	}
+	*encryptDataLen = eitr;
 
     return success;
-
 }
 
 status AES256_CBC_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *encryptData, size_t *encryptDataLen){
@@ -320,27 +296,23 @@ status AES256_CBC_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize];
 
-/*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+/*********************************************************PKCS#7***************************************************************************/
+	if(arrsize%16 != 0)		for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
 
-        for(int i =0 ;  i<16;i++)   temp[i] ^=  IV[i];
+	for(int i =0 ;  i<16;i++)   temp[i] ^=  IV[i];
 
-        for(int i=0; i < newarr; i++){
-            for(int k=0; k < 16; k++){
-                bre[k] = temp[itr++];
-            }
+	for(int i=0; i < newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = temp[itr++];
 
-            encrypt(dim4(bre), 14, round_key256);
-            for(uint8_t r=0; r<4;r++)   for(uint8_t c=0; c<4;c++)   encryptData[eitr++] = state[c][r];
-            for(int i =0 ;  i<16;i++)   temp[i+itr] ^= encryptData[cbcitr++];
+		encrypt(dim4(bre), 14, round_key256);
 
-        }
-        *encryptDataLen = eitr;
+		for(uint8_t r=0; r<4;r++)   for(uint8_t c=0; c<4;c++)   encryptData[eitr++] = state[c][r];
+		for(int i =0 ;  i<16;i++)   temp[i+itr] ^= encryptData[cbcitr++];
+	}
+	*encryptDataLen = eitr;
 
     return success;
 
@@ -355,33 +327,27 @@ status AES128_CFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize + 16], iptr=0;
 
-/*********************************************************PKCS#7***************************************************************************/
-        for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
-        for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
+	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
+	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+/*********************************************************PKCS#7***************************************************************************/
+
+	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
 
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-        	if(i==0)
-        		for(int k=0; k < 16; k++)	bre[k] = temp[k];
-        	else
-        		for(int ke=0; ke < 16; ke++)	bre[ke] = encryptData[itr++];
+	for(int i=0; i< newarr; i++){
+		if(i==0)
+			for(int k=0; k < 16; k++)	bre[k] = temp[k];
+		else
+			for(int ke=0; ke < 16; ke++)	bre[ke] = encryptData[itr++];
 
-            encrypt(dim4(bre), 10, round_key128);
+		encrypt(dim4(bre), 10, round_key128);
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
-            for(int ip =0 ;  ip<16; ip++) {
-            	printf("before : encryptdata[%d] ->  0x%02X | arr[%d] -> 0x%02X\r\n",iptr, encryptData[iptr], epitr, arr[epitr]);
-            	encryptData[iptr++] ^= temp[epitr++ ];
-            	printf("after : encryptdata[%d] ^ arr[%d]- > 0x%02X\r\n", iptr, epitr, encryptData[iptr]);
-            }
-        }
-
-        *encryptDataLen = eitr;
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+		for(int ip =0 ;  ip<16; ip++) 	encryptData[iptr++] ^= temp[epitr++];
+	}
+    *encryptDataLen = eitr;
 
     return success;
 }
@@ -395,33 +361,27 @@ status AES192_CFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize + 16], iptr=0;
 
+	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
+	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 /*********************************************************PKCS#7***************************************************************************/
-        for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
-        for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
 
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-        	if(i==0)
-        		for(int k=0; k < 16; k++)	bre[k] = temp[k];
-        	else
-        		for(int ke=0; ke < 16; ke++)	bre[ke] = encryptData[itr++];
+	for(int i=0; i< newarr; i++){
+		if(i==0)
+			for(int k=0; k < 16; k++)	bre[k] = temp[k];
+		else
+			for(int ke=0; ke < 16; ke++)	bre[ke] = encryptData[itr++];
 
-            encrypt(dim4(bre), 12, round_key192);
+		encrypt(dim4(bre), 12, round_key192);
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
-            for(int ip =0 ;  ip<16; ip++) {
-            	printf("before : encryptdata[%d] ->  0x%02X | arr[%d] -> 0x%02X\r\n",iptr, encryptData[iptr], epitr, arr[epitr-1]);
-            	encryptData[iptr++] ^= temp[epitr++ ];
-            	printf("after : encryptdata[%d] ^ arr[%d]- > 0x%02X\r\n", iptr, epitr, encryptData[iptr]);
-            }
-        }
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+		for(int ip =0 ;  ip<16; ip++)	encryptData[iptr++] ^= temp[epitr++ ];
+	}
 
-        *encryptDataLen = eitr;
+    *encryptDataLen = eitr;
 
     return success;
 }
@@ -436,31 +396,25 @@ status AES256_CFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize + 16];
 
+	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
+	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 /*********************************************************PKCS#7***************************************************************************/
-        for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
-        for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-        	if(i==0)
-        		for(int k=0; k < 16; k++)	bre[k] = temp[k];
-        	else
-        		for(int ke=0; ke < 16; ke++)	bre[ke] = encryptData[itr++];
+	for(int i=0; i< newarr; i++){
+		if(i==0)
+			for(int k=0; k < 16; k++)	bre[k] = temp[k];
+		else
+			for(int ke=0; ke < 16; ke++)	bre[ke] = encryptData[itr++];
 
-            encrypt(dim4(bre), 14, round_key256);
+		encrypt(dim4(bre), 14, round_key256);
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
-            for(int ip =0 ;  ip<16; ip++) {
-            	printf("before : encryptdata[%d] ->  0x%02X | arr[%d] -> 0x%02X\r\n",iptr, encryptData[iptr], epitr, arr[epitr-1]);
-            	encryptData[iptr++] ^= temp[epitr++ ];
-            	printf("after : encryptdata[%d] ^ arr[%d]- > 0x%02X\r\n", iptr, epitr, encryptData[iptr]);
-            }
-        }
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+		for(int ip =0 ;  ip<16; ip++)	encryptData[iptr++] ^= temp[epitr++ ];
+	}
 
-        *encryptDataLen = eitr;
+    *encryptDataLen = eitr;
 
     return success;
 }
@@ -474,41 +428,36 @@ status AES128_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize + 16], iptr=0, endata[arrtotsize + 16];
 
+	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
+
+	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 /*********************************************************PKCS#7***************************************************************************/
-        for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
 
-        for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
-
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)
+		for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
+			temp[ki] = (16 - (arrsize % 16));
 
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-        	if(i==0)
-        		for(int k=0; k < 16; k++)	bre[k] = temp[k];
-        	else
-        		for(int ke=0; ke < 16; ke++)	bre[ke] = endata[itr++];
+	for(int i=0; i< newarr; i++){
+		if(i==0)
+			for(int k=0; k < 16; k++)	bre[k] = temp[k];
+		else
+			for(int ke=0; ke < 16; ke++)	bre[ke] = endata[itr++];
 
-            encrypt(dim4(bre), 10, round_key128);
+		encrypt(dim4(bre), 10, round_key128);
 
-            for(uint8_t r=0; r<4;r++){
-            	for(uint8_t c=0; c<4;c++){
-            		encryptData[eitr++] = state[c][r];
-            		endata[eitr-1] = encryptData[eitr-1];
-            		printf("eitr - > %d\r\n", eitr);
-            	}
-            }
+		for(uint8_t r=0; r<4;r++){
+			for(uint8_t c=0; c<4;c++){
+				encryptData[eitr++] = state[c][r];
+				endata[eitr-1] = encryptData[eitr-1];
+			}
+		}
 
-            for(int ip =0 ;  ip<16; ip++) {
-            	printf("before : encryptdata[%d] ->  0x%02X | arr[%d] -> 0x%02X\r\n",iptr, encryptData[iptr], epitr, arr[epitr]);
-            	encryptData[iptr++] ^= temp[epitr++];
-            	printf("after : encryptdata[%d] ^ arr[%d]- > 0x%02X\r\n", iptr, epitr, encryptData[iptr]);
-            }
-        }
+		for(int ip =0 ;  ip<16; ip++) encryptData[iptr++] ^= temp[epitr++];
 
-        *encryptDataLen = eitr;
+	}
+    *encryptDataLen = eitr;
 
     return success;
 }
@@ -523,40 +472,31 @@ status AES192_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
     uint8_t temp[arrtotsize + 16], iptr=0, endata[arrtotsize + 16];
 
 /*********************************************************PKCS#7***************************************************************************/
-        for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
+	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
 
-        for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
+	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
 
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-        	if(i==0)
-        		for(int k=0; k < 16; k++)	bre[k] = temp[k];
-        	else
-        		for(int ke=0; ke < 16; ke++)	bre[ke] = endata[itr++];
+	for(int i=0; i< newarr; i++){
+		if(i==0)
+			for(int k=0; k < 16; k++)	bre[k] = temp[k];
+		else
+			for(int ke=0; ke < 16; ke++)	bre[ke] = endata[itr++];
 
-            encrypt(dim4(bre), 12, round_key192);
+		encrypt(dim4(bre), 12, round_key192);
 
-            for(uint8_t r=0; r<4;r++){
-            	for(uint8_t c=0; c<4;c++){
-            		encryptData[eitr++] = state[c][r];
-            		endata[eitr-1] = encryptData[eitr-1];
-            		printf("eitr - > %d\r\n", eitr);
-            	}
-            }
-
-            for(int ip =0 ;  ip<16; ip++) {
-            	printf("before : encryptdata[%d] ->  0x%02X | arr[%d] -> 0x%02X\r\n",iptr, encryptData[iptr], epitr, arr[epitr]);
-            	encryptData[iptr++] ^= temp[epitr++];
-            	printf("after : encryptdata[%d] ^ arr[%d]- > 0x%02X\r\n", iptr, epitr, encryptData[iptr]);
-            }
-        }
-
-        *encryptDataLen = eitr;
+		for(uint8_t r=0; r<4;r++){
+			for(uint8_t c=0; c<4;c++){
+				encryptData[eitr++] = state[c][r];
+				endata[eitr-1] = encryptData[eitr-1];
+			}
+		}
+		for(int ip =0 ;  ip<16; ip++) encryptData[iptr++] ^= temp[epitr++];
+	}
+    *encryptDataLen = eitr;
 
     return success;
 }
@@ -571,45 +511,37 @@ status AES256_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
     uint8_t temp[arrtotsize + 16], iptr=0, endata[arrtotsize + 16];
 
 /*********************************************************PKCS#7***************************************************************************/
-        for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
+	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
 
-        for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
+	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
 
 /********************************************************************************************************************************************/
 
-        for(int i=0; i< newarr; i++){
-        	if(i==0)
-        		for(int k=0; k < 16; k++)	bre[k] = temp[k];
-        	else
-        		for(int ke=0; ke < 16; ke++)	bre[ke] = endata[itr++];
+	for(int i=0; i< newarr; i++){
+		if(i==0)
+			for(int k=0; k < 16; k++)	bre[k] = temp[k];
+		else
+			for(int ke=0; ke < 16; ke++)	bre[ke] = endata[itr++];
 
-            encrypt(dim4(bre), 14, round_key256);
+		encrypt(dim4(bre), 14, round_key256);
 
-            for(uint8_t r=0; r<4;r++){
-            	for(uint8_t c=0; c<4;c++){
-            		encryptData[eitr++] = state[c][r];
-            		endata[eitr-1] = encryptData[eitr-1];
-            		printf("eitr - > %d\r\n", eitr);
-            	}
-            }
+		for(uint8_t r=0; r<4;r++){
+			for(uint8_t c=0; c<4;c++){
+				encryptData[eitr++] = state[c][r];
+				endata[eitr-1] = encryptData[eitr-1];
+			}
+		}
 
-            for(int ip =0 ;  ip<16; ip++) {
-            	printf("before : encryptdata[%d] ->  0x%02X | arr[%d] -> 0x%02X\r\n",iptr, encryptData[iptr], epitr, arr[epitr]);
-            	encryptData[iptr++] ^= temp[epitr++];
-            	printf("after : encryptdata[%d] ^ arr[%d]- > 0x%02X\r\n", iptr, epitr, encryptData[iptr]);
-            }
-        }
+		for(int ip =0 ;  ip<16; ip++) encryptData[iptr++] ^= temp[epitr++];
+	}
 
-        *encryptDataLen = eitr;
-
+    *encryptDataLen = eitr;
     return success;
 }
 
-status AES128_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR,uint8_t *encryptData, size_t *encryptDataLen){
+status AES128_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *encryptData, size_t *encryptDataLen){
     uint8_t bre[16] = {0}, eitr=0,newarr=0, epitr=0, iptr=0;
 
 	if(arrsize%16 != 0) newarr = ((arrsize/16)+1); else newarr = (arrsize/16);
@@ -620,47 +552,30 @@ status AES128_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize], ctrtemp[16];
 
-        for(int p=0;p<16;p++){
-        	ctrtemp[p] = CTR[p];
-        }
+	for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
+	for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 /*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
-
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
-        for(int i=0; i< newarr; i++){
 
-            for(int k=0; k < 16; k++){
-            	bre[k] = ctrtemp[k];
-            	printf("bre[%d] -> 0x%02X\r\n", k, bre[k]);
-            }
+	for(int i=0; i< newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = ctrtemp[k];
 
-            encrypt(dim4(bre), 10, round_key128);
+		encrypt(dim4(bre), 10, round_key128);
 
-            value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
-			ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
+		value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
+		ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
 
-			for(int ip =0 ;  ip<16; ip++) printf("encrypt data [%d] 0x%02X \r\n", (eitr-16)+ip, encryptData[eitr-16+ip]);
-
-
-			for(int ip =0 ;  ip<16; ip++) {
-				encryptData[iptr++] ^= temp[epitr++];
-			}
-
-        }
-
-
-        *encryptDataLen = eitr;
+		for(int ip =0 ;  ip<16; ip++)	encryptData[iptr++] ^= temp[epitr++];
+	}
+     *encryptDataLen = eitr;
 
     return success;
-
 }
 
-status AES192_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR,uint8_t *encryptData, size_t *encryptDataLen){
+status AES192_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *encryptData, size_t *encryptDataLen){
     uint8_t bre[16] = {0}, eitr=0, newarr=0, epitr=0, iptr=0;
 
 	if(arrsize%16 != 0) newarr = ((arrsize/16)+1); else newarr = (arrsize/16);
@@ -671,46 +586,32 @@ status AES192_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize], ctrtemp[16];
 
-        for(int p=0;p<16;p++){
-        	ctrtemp[p] = CTR[p];
-        }
+    for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
+    for(int p=0;p<arrsize;p++) temp[p] = arr[p];
+
 /*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+    if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
-        for(int i=0; i< newarr; i++){
 
-            for(int k=0; k < 16; k++){
-            	bre[k] = ctrtemp[k];
-            	printf("bre[%d] -> 0x%02X\r\n", k, bre[k]);
-            }
+    for(int i=0; i< newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = ctrtemp[k];
 
-            encrypt(dim4(bre), 12, round_key192);
+		encrypt(dim4(bre), 12, round_key192);
 
-            value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
-			ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
+		value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
+		ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
 
-			for(int ip =0 ;  ip<16; ip++) printf("encrypt data [%d] 0x%02X \r\n", (eitr-16)+ip, encryptData[eitr-16+ip]);
-
-
-			for(int ip =0 ;  ip<16; ip++) {
-				encryptData[iptr++] ^= temp[epitr++];
-			}
-
-        }
-
-
-        *encryptDataLen = eitr;
+		for(int ip =0 ;  ip<16; ip++) encryptData[iptr++] ^= temp[epitr++];
+	}
+    *encryptDataLen = eitr;
 
     return success;
 }
 
-status AES256_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR,uint8_t *encryptData, size_t *encryptDataLen){
+status AES256_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *encryptData, size_t *encryptDataLen){
     uint8_t bre[16] = {0}, eitr=0, newarr=0, epitr=0, iptr=0;
 
 	if(arrsize%16 != 0) newarr = ((arrsize/16)+1); else newarr = (arrsize/16);
@@ -721,41 +622,26 @@ status AES256_CTR_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize], ctrtemp[16];
 
-        for(int p=0;p<16;p++){
-        	ctrtemp[p] = CTR[p];
-        }
+    for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
+    for(int p=0;p<arrsize;p++) temp[p] = arr[p];
+
 /*********************************************************PKCS#7***************************************************************************/
-        for(int p=0;p<arrsize;p++) temp[p] = arr[p];
 
-        if(arrsize%16 != 0)
-        	for(int ki=arrsize;ki < arrtotsize;ki++)
-        		temp[ki] = (16 - (arrsize % 16));
+	if(arrsize%16 != 0)	for(int ki=arrsize;ki < arrtotsize;ki++)	temp[ki] = (16 - (arrsize % 16));
 /********************************************************************************************************************************************/
-        for(int i=0; i< newarr; i++){
+	for(int i=0; i< newarr; i++){
+		for(int k=0; k < 16; k++)	bre[k] = ctrtemp[k];
 
-            for(int k=0; k < 16; k++){
-            	bre[k] = ctrtemp[k];
-            	printf("bre[%d] -> 0x%02X\r\n", k, bre[k]);
-            }
+		encrypt(dim4(bre), 14, round_key256);
 
-            encrypt(dim4(bre), 14, round_key256);
+		value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
+		ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
 
-            value = (ctrtemp[14] << 8) | ctrtemp[15];	value ++;
-			ctrtemp[14] = (value >> 8) & 0xFF;	ctrtemp[15] = value & 0xFF;
+		for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
 
-            for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	encryptData[eitr++] = state[c][r];
-
-			for(int ip =0 ;  ip<16; ip++) printf("encrypt data [%d] 0x%02X \r\n", (eitr-16)+ip, encryptData[eitr-16+ip]);
-
-
-			for(int ip =0 ;  ip<16; ip++) {
-				encryptData[iptr++] ^= temp[epitr++];
-			}
-
-        }
-
-
-        *encryptDataLen = eitr;
+		for(int ip =0 ;  ip<16; ip++)	encryptData[iptr++] ^= temp[epitr++];
+	}
+    *encryptDataLen = eitr;
 
     return success;
 }
@@ -766,26 +652,41 @@ status AES128_Encrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key
     keyExpansion128(dim4(key));
 
 /*********************************************************AES_ECB_ENC***************************************************************************/
-    if(mode == AES_ECB_ENC)
+
+    if(mode == AES_ECB_ENC){
     	AES128_ECB_EN(mode, arr, arrsize, key, encryptData, encryptDataLen);
+    	return success;
+    }
 
 /*********************************************************AES_CBC_ENC***************************************************************************/
-    if(mode == AES_CBC_ENC)
+
+    if(mode == AES_CBC_ENC){
     	AES128_CBC_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+    	return success;
+    }
 
 /*********************************************************AES_CFB_ENC***************************************************************************/
-    if(mode == AES_CFB_ENC)
+
+    if(mode == AES_CFB_ENC){
     	AES128_CFB_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+    	return success;
+    }
 
 /*********************************************************AES_OFB_ENC***************************************************************************/
-    if(mode == AES_OFB_ENC)
+
+    if(mode == AES_OFB_ENC){
     	AES128_OFB_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+    	return success;
+    }
 
 /*********************************************************AES_CTR_ENC***************************************************************************/
-	if(mode == AES_CTR_ENC)
-		AES128_CTR_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
 
-	return success;
+    if(mode == AES_CTR_ENC){
+		AES128_CTR_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
+
+	return error;
 }
 
 status AES192_Encrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *encryptData, size_t *encryptDataLen){
@@ -793,25 +694,41 @@ status AES192_Encrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key
 	keyExpansion192(dim6(key));
 
 /*********************************************************AES_ECB_ENC***************************************************************************/
-    if(mode == AES_ECB_ENC)
-    	AES192_ECB_EN(mode, arr, arrsize, key, encryptData, encryptDataLen);
+
+	if(mode == AES_ECB_ENC){
+       	AES192_ECB_EN(mode, arr, arrsize, key, encryptData, encryptDataLen);
+		return success;
+    }
 
 /*********************************************************AES_CBC_ENC***************************************************************************/
-    if(mode == AES_CBC_ENC)
+
+	if(mode == AES_CBC_ENC){
     	AES192_CBC_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+    }
 
 /*********************************************************AES_CFB_ENC***************************************************************************/
-	if(mode == AES_CFB_ENC)
+
+	if(mode == AES_CFB_ENC){
 		AES192_CFB_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
 
 /*********************************************************AES_OFB_ENC***************************************************************************/
-	if(mode == AES_OFB_ENC)
+
+	if(mode == AES_OFB_ENC){
 		AES192_OFB_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
 
 /*********************************************************AES_CTR_ENC***************************************************************************/
-	if(mode == AES_CTR_ENC)
+
+	if(mode == AES_CTR_ENC){
 		AES192_CTR_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
-    return success;
+		return success;
+	}
+
+    return error;
 }
 
 status AES256_Encrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *encryptData, size_t *encryptDataLen){
@@ -819,24 +736,39 @@ status AES256_Encrypt(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key
     keyExpansion256(dim8(key));
 
 /*********************************************************AES_ECB_ENC***************************************************************************/
-	if(mode == AES_ECB_ENC)
+
+    if(mode == AES_ECB_ENC){
 		AES256_ECB_EN(mode, arr, arrsize, key, encryptData, encryptDataLen);
+		return success;
+	}
 
 /*********************************************************AES_CBC_ENC***************************************************************************/
-	if(mode == AES_CBC_ENC)
+
+	if(mode == AES_CBC_ENC){
 		AES256_CBC_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
 
 /*********************************************************AES_CFB_ENC***************************************************************************/
-	if(mode == AES_CFB_ENC)
+
+	if(mode == AES_CFB_ENC){
 		AES256_CFB_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
 
 /*********************************************************AES_OFB_ENC***************************************************************************/
-	if(mode == AES_OFB_ENC)
+
+	if(mode == AES_OFB_ENC){
 		AES256_OFB_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
 
 /*********************************************************AES_CTR_ENC***************************************************************************/
-	if(mode == AES_CTR_ENC)
-		AES256_CTR_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
 
-	return success;
+	if(mode == AES_CTR_ENC){
+		AES256_CTR_EN(mode, arr, arrsize, key, IV,  encryptData, encryptDataLen);
+		return success;
+	}
+
+	return error;
 }
