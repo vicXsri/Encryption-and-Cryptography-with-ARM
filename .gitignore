@@ -1,0 +1,23 @@
+# STM32CubeIDE / Build output
+Debug/
+Release/
+*.o
+*.elf
+*.bin
+*.hex
+*.map
+*.list
+
+# IDE metadata
+.settings/
+.cproject
+.project
+.ipynb_checkpoints/
+
+# Auto-generated startup & HAL files (optional, if you don't want them)
+# Startup/
+# Middlewares/
+
+# Other temporary files
+*.swp
+*.tmp
