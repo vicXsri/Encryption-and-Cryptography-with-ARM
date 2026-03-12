@@ -333,7 +333,6 @@ status AES256_CBC_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 /********************************************************************************************************************************************/
     }
 	return success;
-
 }
 
 status AES128_CFB_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *IV, uint8_t *decryptData, size_t *decryptDataLen){
@@ -553,7 +552,6 @@ status AES128_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
          for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
 
          for(int ip =0 ;  ip<16; ip++)	decryptData[iptr++] ^= arr[epitr++];
-
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
 				pad = decryptData[eitr - 1];
@@ -590,7 +588,6 @@ status AES192_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
          for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
 
          for(int ip =0 ;  ip<16; ip++)	decryptData[iptr++] ^= arr[epitr++];
-
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
 				pad = decryptData[eitr - 1];
@@ -606,12 +603,10 @@ status AES192_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 /********************************************************************************************************************************************/
      }
 	return success;
-
 }
 
 status AES256_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key, uint8_t *CTR, uint8_t *decryptData, size_t *decryptDataLen){
     uint8_t bre[16] = {0}, eitr=0, ctrtemp[16], epitr=0, iptr=0, pad=0;
-
     uint16_t value = 0;
 
     for(int p=0;p<16;p++)	ctrtemp[p] = CTR[p];
@@ -626,9 +621,7 @@ status AES256_CTR_DE(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
          encrypt(dim4(bre), 14, round_key256);
 
          for(uint8_t r=0; r<4;r++)	for(uint8_t c=0; c<4;c++)	decryptData[eitr++] = state[c][r];
-
          for(int ip =0 ;  ip<16; ip++)	decryptData[iptr++] ^= arr[epitr++];
-
 /*********************************************************PKCS#7***************************************************************************/
          if((arrsize/16) == i+1){
 				pad = decryptData[eitr - 1];

@@ -429,16 +429,12 @@ status AES128_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
     uint8_t temp[arrtotsize + 16], iptr=0, endata[arrtotsize + 16];
 
 	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
-
 	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
 /*********************************************************PKCS#7***************************************************************************/
-
 	if(arrsize%16 != 0)
 		for(int ki=arrsize+16;ki < arrtotsize+16;ki++)
 			temp[ki] = (16 - (arrsize % 16));
-
 /********************************************************************************************************************************************/
-
 	for(int i=0; i< newarr; i++){
 		if(i==0)
 			for(int k=0; k < 16; k++)	bre[k] = temp[k];
@@ -453,9 +449,7 @@ status AES128_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 				endata[eitr-1] = encryptData[eitr-1];
 			}
 		}
-
 		for(int ip =0 ;  ip<16; ip++) encryptData[iptr++] ^= temp[epitr++];
-
 	}
     *encryptDataLen = eitr;
 
@@ -471,15 +465,12 @@ status AES192_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize + 16], iptr=0, endata[arrtotsize + 16];
 
-/*********************************************************PKCS#7***************************************************************************/
 	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
 
 	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
-
+/*********************************************************PKCS#7***************************************************************************/
 	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
-
 /********************************************************************************************************************************************/
-
 	for(int i=0; i< newarr; i++){
 		if(i==0)
 			for(int k=0; k < 16; k++)	bre[k] = temp[k];
@@ -510,15 +501,11 @@ status AES256_OFB_EN(uint8_t mode, uint8_t *arr, uint32_t arrsize, uint8_t *key,
 
     uint8_t temp[arrtotsize + 16], iptr=0, endata[arrtotsize + 16];
 
-/*********************************************************PKCS#7***************************************************************************/
 	for(int pi=0;pi<16;pi++) temp[pi] = IV[pi];
-
 	for(int p=16;p<arrsize+16;p++) temp[p] = arr[p-16];
-
+/*********************************************************PKCS#7***************************************************************************/
 	if(arrsize%16 != 0)	for(int ki=arrsize+16;ki < arrtotsize+16;ki++)	temp[ki] = (16 - (arrsize % 16));
-
 /********************************************************************************************************************************************/
-
 	for(int i=0; i< newarr; i++){
 		if(i==0)
 			for(int k=0; k < 16; k++)	bre[k] = temp[k];
