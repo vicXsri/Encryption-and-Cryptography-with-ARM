@@ -3,7 +3,7 @@
 This repository contains C implementations of classical and modern cryptographic algorithms, built and tested on the STM32F446RE Nucleo board. It includes a small custom cryptography library, example programs, and a PDF that documents the approach, implementations, and outputs captured from hardware runs.
 Contents
 
-Algorithms implemented
+﻿#﻿#Algorithms implemented
 
 Monoalphabetic cipher
 Polyalphabetic cipher (e.g., Vigenère-style approach)
@@ -33,4 +33,5 @@ Project Goals
 Translate cryptographic concepts into working embedded implementations.
 Validate algorithms on real hardware with deterministic test vectors and observed outputs.
 Provide a clean baseline for future work on public‑key and secure random generation methods for embedded systems.
+
 
