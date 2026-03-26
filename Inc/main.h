@@ -36,4 +36,6 @@ typedef enum{
 #include "aes.h"
 #include "aesEncrypt.h"
 #include "aesDecrypt.h"
+#include "implementation.h"
+
 #endif /* MAIN_H_ */
