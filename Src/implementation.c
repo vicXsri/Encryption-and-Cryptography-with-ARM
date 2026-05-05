@@ -102,6 +102,46 @@ size_t DecryptData128Size=0;
 size_t DecryptData192Size=0;
 size_t DecryptData256Size=0;
 
+void RSA(){
+
+	rsal p=641,q=997;
+
+    char msg[length_rsa]="Hello World !";
+
+    rsal cipher[length_rsa] = {0};
+
+    char decrypted[length_rsa] = {0};
+
+    if(prime(p) == 0 || prime(q) == 0){
+        printf("enter a prime num");
+        return;
+    }
+    if(p == q){
+        printf("Both the prime number cant be same");
+        return;
+    }
+
+    rsal N = p * q;
+    rsal z = (p - 1) * (q - 1);
+
+    rsal e = encryptKey(z);
+    rsal d = decryptKey(e,z);
+
+    printf("N  = %lld\n", N);
+    printf("phi(N) = %lld\n", z);
+    printf("Public key (e) = %lld\n", e);
+    printf("Private key (d) = %lld\n", d);
+
+    rsal len = encodeMsg(msg, e, N, cipher);
+
+    printf("\nEncrypted Message:\n");
+    for(int i = 0; i < len; i++)
+        printf("%lld ", cipher[i]);
+
+    decodeMsg(cipher, len, d, N, decrypted);
+    printf("\n\nDecrypted message: %s\n", decrypted);
+
+}
 
 void AES128_ECB(){
     /*AES128*/

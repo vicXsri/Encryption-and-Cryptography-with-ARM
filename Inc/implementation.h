@@ -10,6 +10,8 @@
 
 #include "main.h"
 
+
+
 void AES128_ECB();
 void AES192_ECB();
 void AES256_ECB();
@@ -30,6 +32,9 @@ void AES128_CTR();
 void AES192_CTR();
 void AES256_CTR();
 
+void RSA();
+
+#define length_rsa  100000
 void outputprint(size_t length, uint8_t *data);
 
 
