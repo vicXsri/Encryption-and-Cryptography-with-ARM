@@ -1,46 +1,42 @@
-# STM32CubeIDE / Eclipse metadata
+# Ignore everything by default
+/*
+
+# Keep these root files
+!.gitignore
+!README.md
+
+# Keep only these folders
+!Cryptography_Custom_lib/
+!f446_CAN/
+!f767_RNG/
+
+# Keep contents inside them
+!Cryptography_Custom_lib/**
+!f446_CAN/**
+!f767_RNG/**
+
+# Ignore STM32CubeIDE generated files inside kept projects
+**/.settings/
+**/Debug/
+**/Release/
+**/build/
+**/*.o
+**/*.d
+**/*.su
+**/*.cyclo
+**/*.elf
+**/*.map
+**/*.list
+**/*.hex
+**/*.bin
+**/*.log
+**/*.tmp
+
+# Ignore workspace metadata
 .metadata/
-*/.settings/
-*/.cproject
-*/.project
 
-# Build output
-*/Debug/
-*/Release/
-*/build/
-
-# Generated object / dependency files
-*.o
-*.d
-*.su
-*.cyclo
-*.elf
-*.map
-*.list
-*.hex
-*.bin
-
-# Temporary / logs
-*.log
-*.tmp
-
-# OS / editor junk
+# OS/editor junk
+.vscode/
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# VS Code
-.vscode/
-
-# Keep user source control clean if these appear
-**/Debug/**
-**/Release/**
-**/build/**
-
-# Optional: ignore generated linker/size outputs if present
-*.launch
-
-# If you do NOT want datasheets in git
-# datasheets/
-
-
