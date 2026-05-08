@@ -16,6 +16,7 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <inttypes.h>
 
 typedef enum{
     success = 0x00U,

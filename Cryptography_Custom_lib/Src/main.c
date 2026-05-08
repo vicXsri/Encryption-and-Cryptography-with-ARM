@@ -11,7 +11,9 @@ uint8_t length = 5;
  */
 
 uint32_t start = 0, end = 0, totaltime = 0;
-
+extern char decrypted[length_rsa];
+extern rsal e;
+extern rsal d;
 int main(){
 
 	fpu_enable();
@@ -22,14 +24,15 @@ int main(){
 
 	start = get_tick();
 
-     AES128_ECB();
+    RSA();
 
-     end = get_tick();
+    end = get_tick();
 
-     totaltime = end - start;
+    totaltime = end - start;
 
-     printf("total time => %lu\r\n", totaltime);
+    printf("total time => %lu\r\n", totaltime);
 
+//   AES128_ECB();
 //   AES192_ECB();
 //   AES256_ECB();
 //
@@ -49,7 +52,6 @@ int main(){
 //	 AES192_CTR();
 //   AES256_CTR();
 
-//   RSA();
 
 	while(1);
 

@@ -111,11 +111,11 @@ void RSA(){
     char decrypted[length_rsa] = {0};
 
     if(prime(p) == 0 || prime(q) == 0){
-        printf("enter a prime num");
+        printf("enter a prime num\r\n");
         return;
     }
     if(p == q){
-        printf("Both the prime number cant be same");
+        printf("Both the prime number cant be same\r\n");
         return;
     }
 
@@ -125,19 +125,21 @@ void RSA(){
     rsal e = encryptKey(z);
     rsal d = decryptKey(e,z);
 
-    printf("N  = %lld\n", N);
-    printf("phi(N) = %lld\n", z);
-    printf("Public key (e) = %lld\n", e);
-    printf("Private key (d) = %lld\n", d);
+
+    printf("N  = %llu \r\n", N);
+    printf("N  = %" PRIu64 "\r\n", N);
+    printf("phi(N) = %" PRIu64 "\r\n", z);
+    printf("Public key (e) = %" PRIu64 "\r\n", e);
+    printf("Private key (d) = %" PRIu64 "\r\n", d);
 
     rsal len = encodeMsg(msg, e, N, cipher);
 
-    printf("\nEncrypted Message:\n");
+    printf("\nEncrypted Message:\r\n");
     for(int i = 0; i < len; i++)
-        printf("%lld ", cipher[i]);
+        printf("%" PRIu64 " ", cipher[i]);
 
     decodeMsg(cipher, len, d, N, decrypted);
-    printf("\n\nDecrypted message: %s\n", decrypted);
+    printf("\r\n\r\nDecrypted message: %s\r\n", decrypted);
 
 }
 
