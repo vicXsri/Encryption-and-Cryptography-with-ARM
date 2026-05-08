@@ -100,6 +100,8 @@ size_t DecryptData128Size=0;
 size_t DecryptData192Size=0;
 size_t DecryptData256Size=0;
 
+char decrypted[length_rsa] = {0};
+
 void RSA(){
 
 	rsal p=641,q=997;
@@ -108,7 +110,6 @@ void RSA(){
 
     rsal cipher[length_rsa] = {0};
 
-    char decrypted[length_rsa] = {0};
 
     if(prime(p) == 0 || prime(q) == 0){
         printf("enter a prime num\r\n");

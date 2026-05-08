@@ -42,20 +42,33 @@
 /* Private variables ---------------------------------------------------------*/
 CAN_HandleTypeDef hcan1;
 
+UART_HandleTypeDef huart2;
+
 /* USER CODE BEGIN PV */
 
+char buff[1200];
+
+uint32_t start = 0, end = 0, totaltime = 0;
+extern char decrypted[length_rsa];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_CAN1_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+RNG_STATETypedef rng;
+
+uint8_t key128[16] = {0};
+uint8_t key192[24] = {0};
+uint8_t key256[32] = {0};
 
 /* USER CODE END 0 */
 
@@ -80,6 +93,7 @@ int main(void)
   /* USER CODE END Init */
 
   /* Configure the system clock */
+
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
@@ -87,9 +101,32 @@ int main(void)
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
+
   MX_GPIO_Init();
   MX_CAN1_Init();
+  MX_USART2_UART_Init();
+
   /* USER CODE BEGIN 2 */
+
+  start = HAL_GetTick();
+
+  RSA();
+
+  end  = HAL_GetTick();
+
+  sprintf(buff, "time -> %lu ms \r\n", end - start);
+  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
+
+  sprintf(buff, "decrpyted data -> %s \r\n", decrypted);
+  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
+
+  RNGSeed(&rng, 0, 0, 0, 0);
+  RNGByte(&rng, key128, sizeof(key128));
+
+  for(uint32_t i = 0; i < sizeof(key128); i++ ){
+	  sprintf(buff, "Key op 128 -> 0x%02X \r\n", key128[i]);
+	  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
+  }
 
   /* USER CODE END 2 */
 
@@ -191,6 +228,39 @@ static void MX_CAN1_Init(void)
   /* USER CODE BEGIN CAN1_Init 2 */
 
   /* USER CODE END CAN1_Init 2 */
+
+}
+
+/**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 115200;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
 
 }
 

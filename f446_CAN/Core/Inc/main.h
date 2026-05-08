@@ -31,6 +31,31 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <inttypes.h>
+
+typedef enum{
+    success = 0x00U,
+    error   = 0x01U,
+    busy    = 0x02U,
+    timeout = 0x03U
+}status;
+
+
+#include "caesar_cipher.h"
+#include "monoalphabetic_cipher.h"
+#include "vigenere_cipher.h"
+#include "aes.h"
+#include "aesEncrypt.h"
+#include "aesDecrypt.h"
+#include "rsa.h"
+#include "rng_soft.h"
+#include "implementation.h"
 
 /* USER CODE END Includes */
 
