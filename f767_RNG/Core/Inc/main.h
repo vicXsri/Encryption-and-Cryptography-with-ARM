@@ -47,7 +47,7 @@ typedef enum{
     timeout = 0x03U
 }status;
 
-
+#include "can.h"
 #include "caesar_cipher.h"
 #include "monoalphabetic_cipher.h"
 #include "vigenere_cipher.h"

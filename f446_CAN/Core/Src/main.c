@@ -46,10 +46,50 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+RNG_STATETypedef rng;
+
 char buff[1200];
 
 uint32_t start = 0, end = 0, totaltime = 0;
 extern char decrypted[length_rsa];
+
+CAN_RxHeaderTypeDef canRx;
+CAN_TxHeaderTypeDef canTx;
+
+uint32_t mailbox = 0;
+
+uint8_t rxData[8] = {0};
+uint8_t txData[8] = {0};
+
+bool handShake = false;
+bool ivRecieved = false;
+bool sizeRecieved = false;
+bool EncDataRec = false;
+
+uint8_t key128[16] = {0};
+uint8_t key192[24] = {0};
+uint8_t key256[32] = {0};
+uint8_t itr = 0;
+uint8_t itrrr = 0;
+
+uint8_t aes128IV[16] = {0};
+
+uint8_t masterKey128[16] = {
+		0x2b, 0x7e, 0x15, 0x16,
+	    0x28, 0xae, 0xd2, 0xa6,
+	    0xab, 0xf7, 0x15, 0x88,
+	    0x09, 0xcf, 0x4f, 0x3c
+};
+
+uint16_t aesDataSize = 0;
+
+
+uint8_t Encrypted128Data[64];
+
+uint8_t Decrypted128Data[180] = {0};
+
+size_t CBCDecryptData128Size = 0;
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -59,16 +99,26 @@ static void MX_CAN1_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
+void CANTransmit(CAN_TxHeaderTypeDef* tx, uint8_t* data);
+
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-RNG_STATETypedef rng;
+void CANACKHandshake(){
 
-uint8_t key128[16] = {0};
-uint8_t key192[24] = {0};
-uint8_t key256[32] = {0};
+	canTx.IDE = CAN_ID_EXT;
+	canTx.ExtId = 0x01; // For Handshake !
+	canTx.DLC = 8;
+
+	for(uint8_t i = 0; i < 8; i++)	txData[i] = 0x01;
+
+	CANTransmit(&canTx, txData);
+
+	handShake = false;
+
+}
 
 /* USER CODE END 0 */
 
@@ -107,26 +157,15 @@ int main(void)
   MX_USART2_UART_Init();
 
   /* USER CODE BEGIN 2 */
+  filter_config();
 
-  start = HAL_GetTick();
-
-  RSA();
-
-  end  = HAL_GetTick();
-
-  sprintf(buff, "time -> %lu ms \r\n", end - start);
-  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
-
-  sprintf(buff, "decrpyted data -> %s \r\n", decrypted);
-  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
-
-  RNGSeed(&rng, 0, 0, 0, 0);
-  RNGByte(&rng, key128, sizeof(key128));
-
-  for(uint32_t i = 0; i < sizeof(key128); i++ ){
-	  sprintf(buff, "Key op 128 -> 0x%02X \r\n", key128[i]);
-	  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
-  }
+//  RNGSeed(&rng, 0, 0, 0, 0);
+//  RNGByte(&rng, key128, sizeof(key128));
+//
+//  for(uint32_t i = 0; i < sizeof(key128); i++ ){
+//	  sprintf(buff, "Key op 128 -> 0x%02X \r\n", key128[i]);
+//	  HAL_UART_Transmit(&huart2, (uint8_t *)buff, strlen(buff), HAL_MAX_DELAY);
+//  }
 
   /* USER CODE END 2 */
 
@@ -134,9 +173,22 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    /* USER CODE END WHILE */
+
+	if(handShake == true)	CANACKHandshake();
+
+	if(ivRecieved == true && sizeRecieved == true && EncDataRec == true){
+
+		if(AES128_Decrypt(AES_CBC_DEC, Encrypted128Data, sizeof(Encrypted128Data), masterKey128, aes128IV, Decrypted128Data, &CBCDecryptData128Size) != success)    printf("\nAES128 CBC Cipher Decrypt Failed\n");
+	    else    printf("\nAES128 CBC Cipher Decrypt Success\n");
+
+	    outputprint(CBCDecryptData128Size, Decrypted128Data);
+
+	}
+
+	/* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
   }
   /* USER CODE END 3 */
 }
@@ -286,6 +338,50 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 
+void CANTransmit(CAN_TxHeaderTypeDef* tx, uint8_t* data){
+
+
+	if(HAL_CAN_AddTxMessage(&hcan1, tx, data, &mailbox) != HAL_OK){
+		Error_Handler();
+	}
+
+}
+
+void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan){
+
+	if(HAL_CAN_GetRxMessage(&hcan1, CAN_RX_FIFO0, &canRx, rxData) != HAL_OK){
+		Error_Handler();
+	}
+
+	if(canRx.ExtId == 0x10){
+		handShake = true;
+	}
+
+	if(canRx.ExtId == 0x11 || canRx.ExtId == 0x12){
+
+		for(uint8_t i = 0; i < 8; i++)  aes128IV[itr++] = rxData[i];
+
+		if(canRx.ExtId == 0x12){
+			ivRecieved = true;
+		}
+
+	}
+
+	if(canRx.ExtId == 0x13){
+		aesDataSize = ((uint16_t)rxData[0] << 8 | rxData[1]);
+		sizeRecieved = true;
+	}
+
+	if(canRx.ExtId == 0x14 || canRx.ExtId == 0x15 || canRx.ExtId == 0x16 || canRx.ExtId == 0x17
+	|| canRx.ExtId == 0x18 || canRx.ExtId == 0x19 || canRx.ExtId == 0x1A || canRx.ExtId == 0x1B ){
+
+		for(uint8_t i = 0; i < 8; i++){
+			Encrypted128Data[itrrr++] = rxData[i];
+		}
+		if(canRx.ExtId == 0x1B)	EncDataRec = true;
+	}
+
+}
 /* USER CODE END 4 */
 
 /**
